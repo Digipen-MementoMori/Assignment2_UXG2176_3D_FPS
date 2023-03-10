@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
-    //Assingables
     public Transform playerCam;
     public Transform orientation;
 
-    //Other
     private Rigidbody rb;
 
-    //Rotation and look
     public bool lockLook;
     private float xRotation;
     public float sensitivity = 50f;
@@ -26,7 +23,6 @@ public class playerMovement : MonoBehaviour
     private float threshold = 0.01f;
     public float maxSlopeAngle = 35f;
 
-    //Crouch & Slide
     private Vector3 crouchScale = new Vector3(1, 0.5f, 1);
     private Vector3 playerScale;
     public float slideForce = 400;
@@ -97,9 +93,6 @@ public class playerMovement : MonoBehaviour
         jumping = Input.GetKey(KeyCode.Space);
         crouching = Input.GetKey(KeyCode.LeftShift);
 
-        //Calculating input vector
-        //inputVector = new Vector3(x, 0, y);
-
         //Crouching
         if (Input.GetKeyDown(KeyCode.LeftShift))
             StartCrouch();
@@ -114,7 +107,7 @@ public class playerMovement : MonoBehaviour
         }
 
         //AirDash
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
+        if ((Input.GetKeyDown(KeyCode.W))
         && dashTappedTimes <= 1)
         {
             dashTappedTimes++;
@@ -233,7 +226,6 @@ public class playerMovement : MonoBehaviour
             //Reset Velocity
             rb.velocity = Vector3.zero;
 
-            //Disable dashForceCounter if doublejumping while dashing
             allowDashForceCounter = false;
 
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -268,7 +260,6 @@ public class playerMovement : MonoBehaviour
     {
         rb.useGravity = true;
 
-        //Counter currentForce
         if (allowDashForceCounter)
         {
             rb.AddForce(dashStartVector * -dashForce * 0.5f);
@@ -304,11 +295,10 @@ public class playerMovement : MonoBehaviour
         Vector3 rot = playerCam.transform.localRotation.eulerAngles;
         desiredX = rot.y + mouseX;
 
-        //Rotate, and also make sure we dont over- or under-rotate.
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        //Perform the rotations
+        //rotation
         playerCam.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
     }
@@ -369,7 +359,7 @@ public class playerMovement : MonoBehaviour
         int layer = other.gameObject.layer;
         if (whatIsGround != (whatIsGround | (1 << layer))) return;
 
-        //Iterate through every collision in a physics update
+        //Iterate through every collision
         for (int i = 0; i < other.contactCount; i++)
         {
             Vector3 normal = other.contacts[i].normal;

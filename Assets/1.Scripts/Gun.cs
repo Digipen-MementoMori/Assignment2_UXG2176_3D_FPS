@@ -1,17 +1,15 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class Gun : MonoBehaviour
 {
-    //Gun stats
+
     public int damage;
     public float timeBetweenShooting, spread, range, reloadTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool isAutomaticWeapon;
     int bulletsLeft, bulletsShot;
 
-    //some bools
     bool shooting, readyToShoot, reloading;
 
     public Camera fpsCam;
@@ -73,8 +71,10 @@ public class Gun : MonoBehaviour
             rayHit.collider.gameObject.SetActive(false);
         }
 
-        Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
 
+        GameObject temp =  Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+        Destroy(temp,1.0f);
+        
         //Shake Camera
         camShake.StartCoroutine(camShake.Shake(camShakeDuration, camShakeMagnitude));
 
